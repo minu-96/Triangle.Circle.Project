@@ -7,28 +7,49 @@ public static class PuzzleGenerator
         ShapeType.Circle, ShapeType.Triangle, ShapeType.Square, ShapeType.Star
     };
 
-    public static ShapeType[,] GeneratePuzzle()
+    public static void GenerateFullAnswer(ShapeType[,] board)
     {
-        ShapeType[,] fullBoard = new ShapeType[9, 9];
-        GenerateFullBoard(fullBoard, 0, 0);
+        bool success = GenerateFullBoard(board, 0, 0);
+        Debug.Log($"정답 퍼즐 생성 결과: {success}");
 
-        ShapeType[,] puzzle = (ShapeType[,])fullBoard.Clone();
-        List<(int x, int y)> positions = new();
+        // 디버깅: 생성된 정답 출력
+        for (int y = 0; y < 9; y++)
+        {
+            string row = "";
+            for (int x = 0; x < 9; x++)
+            {
+                row += board[x, y] + " ";
+            }
+            Debug.Log(row);
+        }
+    }
+
+    public static ShapeType[,] MakePuzzleFromAnswer(ShapeType[,] answer, int revealCount)
+    {
+        ShapeType[,] puzzle = (ShapeType[,])answer.Clone();
+        List<(int x, int y)> cells = new();
 
         for (int x = 0; x < 9; x++)
             for (int y = 0; y < 9; y++)
-                positions.Add((x, y));
+                cells.Add((x, y));
 
-        positions.Shuffle();
+        cells.Shuffle();
 
-        foreach (var (x, y) in positions)
+        int removeCount = 81 - revealCount;
+
+        foreach (var (x, y) in cells)
         {
             ShapeType backup = puzzle[x, y];
             puzzle[x, y] = ShapeType.None;
 
             if (!PuzzleSolver.HasUniqueSolution(puzzle))
             {
-                puzzle[x, y] = backup; // 복원
+                puzzle[x, y] = backup;  // 되돌림
+            }
+            else
+            {
+                removeCount--;
+                if (removeCount <= 0) break;
             }
         }
 
@@ -39,6 +60,10 @@ public static class PuzzleGenerator
     {
         if (x == 9) { x = 0; y++; if (y == 9) return true; }
 
+        List<ShapeType> shapes = new() {
+        ShapeType.Circle, ShapeType.Triangle, ShapeType.Square,
+        ShapeType.Hexagon, ShapeType.Star
+    };
         shapes.Shuffle();
 
         foreach (var shape in shapes)
@@ -50,7 +75,6 @@ public static class PuzzleGenerator
                 board[x, y] = ShapeType.None;
             }
         }
-
         return false;
     }
 }

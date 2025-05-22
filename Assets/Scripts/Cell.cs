@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class Cell : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class Cell : MonoBehaviour
     public Sprite[] shapeSprites;
 
     private ShapeType shape = ShapeType.None;
+    private bool isLocked = false;
 
     public void Init(int x, int y, PuzzleManager manager)
     {
@@ -25,9 +25,24 @@ public class Cell : MonoBehaviour
     }
 
     public ShapeType GetShape() => shape;
+
     public void Clear()
     {
         shape = ShapeType.None;
         shapeImage.sprite = null;
     }
+
+    public void Lock()
+    {
+        isLocked = true;
+        button.interactable = false;
+    }
+
+    public void Unlock()
+    {
+        isLocked = false;
+        button.interactable = true;
+    }
+
+    public bool IsLocked() => isLocked;
 }

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public static class PuzzleSolver
 {
     private static ShapeType[] shapes = {
@@ -30,23 +28,32 @@ public static class PuzzleSolver
                 board[x, y] = ShapeType.None;
             }
         }
-
         return false;
     }
 
     public static bool IsValidMove(ShapeType[,] board, int x, int y, ShapeType shape)
     {
-        // 가로 세로 검사
-        for (int i = 0; i < 9; i++)
-        {
-            if (board[i, y] == shape || board[x, i] == shape) return false;
-        }
+        int count = 0;
 
+        // 행 검사
+        for (int i = 0; i < 9; i++)
+            if (board[i, y] == shape) count++;
+        if (count >= 2) return false;
+
+        // 열 검사
+        count = 0;
+        for (int i = 0; i < 9; i++)
+            if (board[x, i] == shape) count++;
+        if (count >= 2) return false;
+
+        // 블록 검사
+        count = 0;
         int blockX = (x / 3) * 3;
         int blockY = (y / 3) * 3;
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                if (board[blockX + i, blockY + j] == shape) return false;
+                if (board[blockX + i, blockY + j] == shape) count++;
+        if (count >= 2) return false;
 
         return true;
     }
