@@ -41,6 +41,11 @@ public class PuzzleManager : MonoBehaviour
         ApplyPuzzleToBoard();
     }
 
+    void Update()
+    {
+        CheckAnswer();
+    }
+
     void CreateBoard()
     {
         for (int y = 0; y < 9; y++)
@@ -108,5 +113,7 @@ public class PuzzleManager : MonoBehaviour
             }
         }
         Debug.Log("정답입니다!");
+        Application.Quit();
+        //UnityEditor.EditorApplication.isPlaying = false;
     }
 }
