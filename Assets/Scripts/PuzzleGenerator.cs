@@ -9,10 +9,9 @@ public static class PuzzleGenerator
 
     public static void GenerateFullAnswer(ShapeType[,] board)
     {
-        bool success = GenerateFullBoard(board, 0, 0);
-        Debug.Log($"정답 퍼즐 생성 결과: {success}");
+        bool result = GenerateFullBoard(board, 0, 0);
+        Debug.Log($"[GenerateFullAnswer] 퍼즐 생성 성공 여부: {result}");
 
-        // 디버깅: 생성된 정답 출력
         for (int y = 0; y < 9; y++)
         {
             string row = "";
