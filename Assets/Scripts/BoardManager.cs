@@ -22,6 +22,12 @@ public class BoardManager : MonoBehaviour
     
     private RuleChecker ruleChecker;
     private PuzzleGenerator puzzleGenerator;
+    
+    [Header("Memo Mode")]
+    public bool isMemoMode = false; // 메모 모드 활성화 여부
+    
+    [Header("Hint System")]
+    private ShapeType[,] solutionBoard; // 정답 보드 (힌트용)
 
     void Start()
     {
@@ -50,7 +56,21 @@ public class BoardManager : MonoBehaviour
     {
         if (puzzleGenerator != null)
         {
-            ShapeType[,] puzzle = puzzleGenerator.GeneratePuzzle(
+            // GameManager 인스턴스 확인
+            if (GameManager.Instance == null)
+            {
+                Debug.LogError("GameManager가 없습니다!");
+                return;
+            }
+            
+            Debug.Log($"현재 모드: {GameManager.Instance.currentMode}, 난이도: {GameManager.Instance.currentDifficulty}, 스테이지: {GameManager.Instance.currentStage}");
+            
+            // 완전한 보드 생성 (정답)
+            solutionBoard = puzzleGenerator.GenerateCompletePuzzle();
+            
+            // 난이도에 따라 일부 셀 제거
+            ShapeType[,] puzzle = puzzleGenerator.CreatePuzzleFromSolution(
+                solutionBoard,
                 GameManager.Instance.currentDifficulty
             );
             
@@ -91,10 +111,83 @@ public class BoardManager : MonoBehaviour
         }
         
         selectedShape = (ShapeType)shapeIndex;
-        Debug.Log($"도형 선택: {selectedShape}");
+        Debug.Log($"도형 선택: {selectedShape} (메모 모드: {isMemoMode})");
         
-        // 즉시 배치
-        PlaceShape();
+        // 메모 모드면 메모 추가/제거, 아니면 배치
+        if (isMemoMode)
+        {
+            AddOrRemoveMemo();
+        }
+        else
+        {
+            PlaceShape();
+        }
+    }
+    
+    void AddOrRemoveMemo()
+    {
+        if (selectedCell == null || selectedShape == ShapeType.None) return;
+        
+        // 이미 메모에 있으면 제거, 없으면 추가
+        if (selectedCell.memos.Contains(selectedShape))
+        {
+            selectedCell.RemoveMemo(selectedShape);
+        }
+        else
+        {
+            selectedCell.AddMemo(selectedShape);
+        }
+        
+        selectedShape = ShapeType.None;
+    }
+    
+    public void ToggleMemoMode()
+    {
+        isMemoMode = !isMemoMode;
+        Debug.Log($"메모 모드: {(isMemoMode ? "ON" : "OFF")}");
+    }
+    
+    public void UseHint()
+    {
+        if (selectedCell == null)
+        {
+            Debug.LogWarning("먼저 힌트를 받을 셀을 선택하세요!");
+            return;
+        }
+        
+        if (selectedCell.isInitial)
+        {
+            Debug.LogWarning("이미 채워진 셀입니다!");
+            return;
+        }
+        
+        if (solutionBoard != null)
+        {
+            ShapeType correctShape = solutionBoard[selectedCell.row, selectedCell.col];
+            selectedCell.SetShape(correctShape, false);
+            
+            Debug.Log($"힌트: ({selectedCell.row}, {selectedCell.col})에 {correctShape} 배치");
+            
+            selectedCell.Highlight(false);
+            selectedCell = null;
+            
+            // 클리어 체크
+            CheckCompletion();
+        }
+    }
+    
+    void CheckCompletion()
+    {
+        if (ruleChecker != null && ruleChecker.IsComplete(cells))
+        {
+            Debug.Log("퍼즐 완성!");
+            
+            GameController gameController = FindObjectOfType<GameController>();
+            if (gameController != null)
+            {
+                gameController.OnPuzzleComplete();
+            }
+        }
     }
 
     void PlaceShape()
@@ -105,22 +198,7 @@ public class BoardManager : MonoBehaviour
         selectedCell.SetShape(selectedShape, false);
         
         // 규칙 체크
-        if (ruleChecker != null)
-        {
-            ruleChecker.CheckRules(cells);
-            
-            if (ruleChecker.IsComplete(cells))
-            {
-                Debug.Log("퍼즐 완성!");
-                
-                // GameController에 클리어 알림
-                GameController gameController = FindObjectOfType<GameController>();
-                if (gameController != null)
-                {
-                    gameController.OnPuzzleComplete();
-                }
-            }
-        }
+        CheckCompletion();
         
         // 선택 해제
         selectedCell.Highlight(false);

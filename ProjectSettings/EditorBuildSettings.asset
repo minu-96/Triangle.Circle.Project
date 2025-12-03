@@ -18,8 +18,14 @@ EditorBuildSettings:
     path: Assets/WebScene/Start.unity
     guid: f350a505cace441f2b044171058c5bdc
   - enabled: 1
+    path: Assets/WebScene/Mode.unity
+    guid: e6a67bb45311446449224fe2c3842430
+  - enabled: 1
     path: Assets/WebScene/Menu.unity
     guid: da599ce8e0a5f437bacb2b4669f99491
+  - enabled: 1
+    path: Assets/WebScene/Stage.unity
+    guid: 828c63a14ae824af081250f46e0cd979
   - enabled: 1
     path: Assets/WebScene/InGame.unity
     guid: b07a4fcad13c044239bbf940186c8541

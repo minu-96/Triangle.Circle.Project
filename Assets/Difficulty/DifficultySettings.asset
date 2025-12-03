@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   easyEmptyCells: 11
   easySymmetryChance: 0.3
-  normalEmptyCells: 31
+  normalEmptyCells: 21
   normalSymmetryChance: 0.5
-  hardEmptyCells: 51
+  hardEmptyCells: 41
   hardSymmetryChance: 0.8
   minHintsPerBlock: 1
   minHintsPerLine: 2

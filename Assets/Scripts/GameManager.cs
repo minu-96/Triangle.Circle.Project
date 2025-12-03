@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     public GameDifficulty currentDifficulty = GameDifficulty.Easy;
     public GameMode currentMode = GameMode.Classic;
+    public int currentStage = 1; // 스테이지 모드용 (1~81)
 
     private void Awake()
     {
@@ -39,6 +40,13 @@ public class GameManager : MonoBehaviour
         currentDifficulty = difficulty;
         Debug.Log($"난이도 설정: {difficulty}");
     }
+
+    public void SetStage(int stageNumber)
+{
+    currentStage = Mathf.Clamp(stageNumber, 1, 81);
+    currentMode = GameMode.Stage;
+    Debug.Log($"스테이지 설정: {currentStage}");
+}
 
     // Inspector에서 값 조절 가능하도록 변경
     [Header("Difficulty Balance")]

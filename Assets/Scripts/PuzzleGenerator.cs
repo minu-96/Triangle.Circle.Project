@@ -11,6 +11,48 @@ public class PuzzleGenerator : MonoBehaviour
         ruleChecker = GetComponent<RuleChecker>();
     }
 
+    // 완전한 보드 생성 (정답용)
+    public ShapeType[,] GenerateCompletePuzzle()
+    {
+        ShapeType[,] board = new ShapeType[9, 9];
+        FillBoard(board);
+        return board;
+    }
+    
+    // 정답에서 일부를 제거하여 퍼즐 생성
+    public ShapeType[,] CreatePuzzleFromSolution(ShapeType[,] solution, GameDifficulty difficulty)
+    {
+        ShapeType[,] puzzle = (ShapeType[,])solution.Clone();
+        
+        int emptyCells;
+        
+        // GameManager 확인
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("GameManager가 없습니다!");
+            emptyCells = 35; // 기본값
+        }
+        // 스테이지 모드 체크
+        else if (GameManager.Instance.currentMode == GameMode.Stage)
+        {
+            emptyCells = GameManager.Instance.currentStage;
+            Debug.Log($"[PuzzleGenerator] 모드: Stage, 스테이지: {GameManager.Instance.currentStage}, 빈칸: {emptyCells}");
+        }
+        // 클래식 모드
+        else
+        {
+            emptyCells = settings != null 
+                ? settings.GetEmptyCellCount(difficulty)
+                : GetEmptyCellCount(difficulty);
+            
+            Debug.Log($"[PuzzleGenerator] 모드: Classic, 난이도: {difficulty}, 빈칸: {emptyCells}");
+        }
+        
+        RemoveCells(puzzle, emptyCells);
+        
+        return puzzle;
+    }
+
     public ShapeType[,] GeneratePuzzle(GameDifficulty difficulty)
     {
         ShapeType[,] board = new ShapeType[9, 9];
@@ -163,7 +205,6 @@ public class PuzzleGenerator : MonoBehaviour
             board[pos.x, pos.y] = ShapeType.None;
         }
     }
-
 
     // 전략적 위치 반환 (어려움 모드)
     List<Vector2Int> GetStrategicPositions(List<Vector2Int> positions)
