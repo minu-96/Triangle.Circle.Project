@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
 
     [Header("UIPanel")]
     public GameObject uiPanel;
+    
 
     void Start()
     {
@@ -40,7 +41,7 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                difficultyText.text = $"Difficulty: {GameManager.Instance.currentDifficulty}";
+                difficultyText.text = $"{GameManager.Instance.currentDifficulty}";
             }
         }
 
@@ -71,6 +72,7 @@ public class GameController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             UpdateTimerDisplay();
         }
+        
     }
 
     void UpdateTimerDisplay()
@@ -245,4 +247,5 @@ public class GameController : MonoBehaviour
     {
         uiPanel.SetActive(false);
     }
+    
 }

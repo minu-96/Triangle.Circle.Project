@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 7230dd84db31f47d3b078b19e3126bc6
+guid: 2658da179c89747ebbfde91d66f502a5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4499503099449193857
-    second: HexagonFlatTop_0
+      213: -26329759613171845
+    second: Group 4_0
+  - first:
+      213: -2591891768109001643
+    second: Group 4_1
+  - first:
+      213: -6463649221723598781
+    second: Group 4_2
+  - first:
+      213: -2686478590950958983
+    second: Group 4_3
+  - first:
+      213: 2429154337656730977
+    second: Group 4_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -97,7 +109,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -110,7 +122,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -139,13 +151,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HexagonFlatTop_0
+      name: Group 4_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 15
-        width: 256
-        height: 226
+        y: 6503
+        width: 4146
+        height: 4101
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +166,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f7acf8b35cd8e81c0800000000000000
-      internalID: -4499503099449193857
+      spriteID: b774c3f193572aff0800000000000000
+      internalID: -26329759613171845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 4_1
+      rect:
+        serializedVersion: 2
+        x: 4487
+        y: 6689
+        width: 4569
+        height: 3914
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5549a995b20c70cd0800000000000000
+      internalID: -2591891768109001643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 4_2
+      rect:
+        serializedVersion: 2
+        x: 10077
+        y: 6603
+        width: 4038
+        height: 4001
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3405f6a57418c46a0800000000000000
+      internalID: -6463649221723598781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 4_3
+      rect:
+        serializedVersion: 2
+        x: 4875
+        y: 422
+        width: 4346
+        height: 4089
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9781da184f5b7bad0800000000000000
+      internalID: -2686478590950958983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 4_4
+      rect:
+        serializedVersion: 2
+        x: 10136
+        y: 461
+        width: 4304
+        height: 4049
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 165f0a8fff616b120800000000000000
+      internalID: 2429154337656730977
       vertices: []
       indices: 
       edges: []
@@ -173,8 +273,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      HexagonFlatTop_0: -4499503099449193857
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

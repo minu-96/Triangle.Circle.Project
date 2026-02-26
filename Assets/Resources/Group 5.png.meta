@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 5f09ed236ccc745a88637d601fe7cd02
+guid: 214fe3d922703428ab2878bab573a046
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2413806693520163455
-    second: Circle_0
+      213: 538513131370383185
+    second: Group 5_0
+  - first:
+      213: -6820587023551069044
+    second: Group 5_1
+  - first:
+      213: -1517477002974891179
+    second: Group 5_2
+  - first:
+      213: 285723855133415817
+    second: Group 5_3
+  - first:
+      213: 6872111932907113895
+    second: Group 5_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -97,7 +109,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -110,7 +122,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -139,13 +151,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Circle_0
+      name: Group 5_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 256
-        height: 256
+        y: 6503
+        width: 4146
+        height: 4101
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +166,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 18d3544e99f608ed0800000000000000
-      internalID: -2413806693520163455
+      spriteID: 157073ef6de297700800000000000000
+      internalID: 538513131370383185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 5_1
+      rect:
+        serializedVersion: 2
+        x: 4487
+        y: 6689
+        width: 4569
+        height: 3914
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8489953d386851a0800000000000000
+      internalID: -6820587023551069044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 5_2
+      rect:
+        serializedVersion: 2
+        x: 10077
+        y: 6603
+        width: 4038
+        height: 4001
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5537bdaa4b6d0fae0800000000000000
+      internalID: -1517477002974891179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 5_3
+      rect:
+        serializedVersion: 2
+        x: 4875
+        y: 422
+        width: 4346
+        height: 4089
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9891519155817f300800000000000000
+      internalID: 285723855133415817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 5_4
+      rect:
+        serializedVersion: 2
+        x: 10136
+        y: 461
+        width: 4304
+        height: 4049
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7adc6a99465ae5f50800000000000000
+      internalID: 6872111932907113895
       vertices: []
       indices: 
       edges: []
@@ -173,8 +273,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Circle_0: -2413806693520163455
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
