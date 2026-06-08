@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Triangle.Circle.Project.sln"
+    "dotnet.defaultSolution": "Triangle.Circle.Project.slnx"
 }
