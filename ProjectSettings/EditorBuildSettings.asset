@@ -8,30 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/WebScene/Samgakwon.unity
     guid: 6f78e6ad19a74563bfc494e68b61ad2d
-  - enabled: 0
-    path: Assets/Scenes/Start.unity
-    guid: ec41fbbf419ce49af8dd35dc1657b223
-  - enabled: 0
-    path: Assets/Scenes/Menu.unity
-    guid: d800bad3ef41e409babb55df4fc315b8
-  - enabled: 0
-    path: Assets/Scenes/InGame.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
-    path: Assets/WebScene/Start.unity
-    guid: f350a505cace441f2b044171058c5bdc
-  - enabled: 1
-    path: Assets/WebScene/Mode.unity
-    guid: e6a67bb45311446449224fe2c3842430
-  - enabled: 1
-    path: Assets/WebScene/Menu.unity
-    guid: da599ce8e0a5f437bacb2b4669f99491
-  - enabled: 1
-    path: Assets/WebScene/Stage.unity
-    guid: 828c63a14ae824af081250f46e0cd979
-  - enabled: 1
-    path: Assets/WebScene/InGame.unity
-    guid: b07a4fcad13c044239bbf940186c8541
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

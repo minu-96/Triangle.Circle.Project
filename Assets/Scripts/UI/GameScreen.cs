@@ -101,7 +101,8 @@ public class GameScreen : UIScreen
         if (!board.IsReady) board.InitializeBoard();
         else board.ResetBoard();
         if (saved != null)
-            board.Restore(PuzzleSave.Expand(saved.initial), PuzzleSave.Expand(saved.board), PuzzleSave.Expand(saved.solution));
+            board.Restore(PuzzleSave.Expand(saved.initial), PuzzleSave.Expand(saved.board),
+                          PuzzleSave.Expand(saved.solution), saved.memos);
 
         board.InputEnabled = true;
         sessionActive = true;

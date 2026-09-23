@@ -82,7 +82,6 @@ public static class SamgakwonValidation
             }
             results.Add("81 stage counts, center-first, even blocks, empty stage 81, endless range");
             gm.currentMode = GameMode.Classic; gm.currentStage = 1; gm.currentDifficulty = GameDifficulty.Easy;
-            root.AddComponent<RuleChecker>();
             var board = root.AddComponent<BoardManager>();
             var holder = new GameObject("Cells", typeof(RectTransform)); holder.transform.SetParent(root.transform);
             var template = new GameObject("Template", typeof(RectTransform), typeof(Cell)); template.transform.SetParent(root.transform);

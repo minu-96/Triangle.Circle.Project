@@ -25,7 +25,12 @@ public class ModalService : MonoBehaviour
     {
         current = request;
         if (dialog != null) dialog.Render(theme, request);
-        if (root != null) root.SetActive(true);
+        if (root != null)
+        {
+            root.SetActive(true);
+            // 액션 버튼은 요청마다 새로 만들어지므로 여기서 클릭음을 붙인다.
+            ButtonClickSound.BindAll(root);
+        }
     }
 
     public void Close()

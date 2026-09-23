@@ -189,9 +189,37 @@ BGM 기본값은 **꺼짐**이다(`SamgakwonMusic`, 원본 사이트와 동일).
 - 런타임·에디터 스크립트는 Unity 어셈블리 대상으로 컴파일 검증했습니다(에러 0).
 - **아직 에디터에서 Play로 실물 확인은 하지 않았습니다.** 위 빌드 메뉴 실행 후 확인이 필요합니다.
 
-## 남은 정리
+## 정리 현황
 
-- `Assets/Scripts/SamgakwonApp.cs` 는 이전 HTML 방식 구현입니다. 새 씬이 정상 동작하는 것을
-  확인한 뒤 삭제하면 됩니다(현재는 되돌릴 수 있도록 남겨 둠).
-- 패널/버튼 PNG에 9-slice 보더가 없어 `Image.Type.Simple`로 그립니다.
-  모서리를 더 또렷하게 하려면 해당 스프라이트에 보더를 지정하고 `Sliced`로 바꾸면 됩니다.
+구현이 **하나로 합쳐졌다.** 옛 씬 경로를 전부 제거했다.
+
+삭제:
+
+- 씬 5개 — `InGame` · `Menu` · `Mode` · `Stage` · `Start` (남은 씬은 `Samgakwon` 하나)
+- 스크립트 12개 — `SamgakwonApp`(486줄, HTML 이식) · `GameController`(327줄) ·
+  `ChangScene` · `MenuManager` · `TutorialManager` · `ChapterIntroController` ·
+  `OptionManager` · `QuitGame` · `SettingManager` · `EditablIndicator` ·
+  `RuleChecker` · `GameManagerInitializer`
+- `Assets/Prefeb/` 전체 (옛 Cell · Image · SettingManager · StageLevel 프리팹)
+
+함께 정리한 결합:
+
+- `BoardManager.AfterChange` 의 `FindFirstObjectByType<GameController>()` 폴백 →
+  `Completed?.Invoke()` 로 단순화. 새 화면은 항상 이벤트를 구독한다.
+- `RuleChecker` — 공개 메서드 3개가 어디서도 호출되지 않았다(판정은 `PuzzleSolver`).
+  씬에 남아 있던 컴포넌트까지 제거했다.
+- Build Settings — 존재하지 않는 `Assets/Scenes/*` 항목 3개와 옛 씬 5개를 빼고
+  `Samgakwon.unity` 하나만 남겼다.
+
+검증: 컴파일 0 에러, 씬 dangling 0, 깨진 스크립트 참조 0(미해결 GUID 는 전부 Unity 패키지).
+
+### 남은 것 — 빌드 용량
+
+`Assets/Resources/` 안의 파일은 **참조 여부와 무관하게 전부 빌드에 포함**된다.
+옛 씬 삭제로 아래 19개가 고아가 됐고 합계 약 51 MB 다.
+
+- `33.5s Recording ... .wav` (46 MB) · `MainMixer.mixer`
+- 옛 UI 이미지 17장 (`Group *.png` · `Frame *.png` · `Rectangle 35.png` · `Pallete.png` 등)
+
+런타임 코드는 더 이상 `Resources.Load` 를 쓰지 않는다(에디터 검증 스크립트만 사용).
+에셋 팩을 `Resources/` 밖으로 옮기면 실제로 참조되는 것만 빌드에 들어간다.

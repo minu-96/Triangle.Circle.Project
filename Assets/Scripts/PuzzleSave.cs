@@ -11,6 +11,7 @@ public class PuzzleSave
     public float elapsed;
     public int hintsUsed;               // 한 판에 쓴 힌트 수 (이어하기로 초기화되지 않도록 저장)
     public int[] initial, board, solution;
+    public int[] memos;                 // 칸별 메모 비트마스크(도형 1~5 = 비트 1~5). 없으면 null
     const string Key = "SamgakwonResume_v1";
 
     public static int[] Flatten(ShapeType[,] source)
@@ -33,6 +34,12 @@ public class PuzzleSave
             hintsUsed < 0 || hintsUsed > 99 ||
             initial == null || board == null || solution == null ||
             initial.Length != 81 || board.Length != 81 || solution.Length != 81) return false;
+        // 메모는 없을 수 있다(구버전 저장 · 메모 구간 밖). 있으면 형식을 확인한다.
+        if (memos != null)
+        {
+            if (memos.Length != 81) return false;
+            foreach (int mask in memos) if (mask < 0 || mask > 0b111110) return false;
+        }
         for (int i = 0; i < 81; i++)
             if (initial[i] < 0 || initial[i] > 5 || board[i] < 0 || board[i] > 5 ||
                 solution[i] < 1 || solution[i] > 5 ||
@@ -56,6 +63,7 @@ public class PuzzleSave
         if (gm == null || gm.currentMode == GameMode.Endless) return;
         var save = new PuzzleSave { mode = gm.currentMode, difficulty = gm.currentDifficulty,
             stage = gm.currentStage, elapsed = elapsed, hintsUsed = hintsUsed,
+            memos = source.GetMemoMasks(),
             initial = Flatten(source.GetInitialBoard()),
             board = Flatten(source.GetBoard()), solution = Flatten(source.GetSolutionBoard()) };
         if (!save.IsValid()) return;

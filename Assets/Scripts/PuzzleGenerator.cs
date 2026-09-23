@@ -3,14 +3,8 @@ using System.Collections.Generic;
 
 public class PuzzleGenerator : MonoBehaviour
 {
-    private RuleChecker ruleChecker;
     // 빈칸 수 밸런스는 StageBalance 로 옮겼다. 이 필드는 기존 씬 호환용으로만 남아 있다.
     public DifficultySettings settings;
-
-    void Awake()
-    {
-        ruleChecker = GetComponent<RuleChecker>();
-    }
 
     // 완전한 보드 생성 (정답용)
     public ShapeType[,] GenerateCompletePuzzle()
@@ -73,7 +67,7 @@ public class PuzzleGenerator : MonoBehaviour
         {
             // 엔드리스: 4장(복합) 난이도, 매 판 무작위 빈칸 + 복합 전략
             emptyCells = StageBalance.EndlessBlanks();
-            strategy = RemovalStrategy.Mixed;
+            strategy = RemovalStrategy.Composite;
             Debug.Log($"[PuzzleGenerator] Endless, 빈칸 {emptyCells}, 전략 {strategy}");
         }
         else
@@ -86,6 +80,54 @@ public class PuzzleGenerator : MonoBehaviour
 
         RemoveCells(puzzle, emptyCells, strategy);
 
+        return puzzle;
+    }
+
+    /// <summary>
+    /// 빈 칸 일부에 후보 2개짜리 메모를 만들어 비트마스크(도형 1~5 = 비트 1~5)로 돌려준다.
+    /// 후보는 "정답 + 그 칸에 놓을 수 있는 다른 도형 1개"이므로 정답이 반드시 포함된다.
+    /// 처음 한 번만 계산하며 이후 갱신하지 않는다 — 실시간으로 갱신하면
+    /// "후보가 가장 적은 칸부터 채운다"는 최적 전략을 그대로 쥐여주게 된다.
+    /// </summary>
+    public int[] CreateMemos(ShapeType[,] puzzle, ShapeType[,] solution, int count)
+    {
+        var masks = new int[81];
+        if (count <= 0 || puzzle == null || solution == null) return masks;
+
+        var pool = new List<int>();
+        for (int i = 0; i < 81; i++)
+            if (puzzle[i / 9, i % 9] == ShapeType.None) pool.Add(i);
+        Shuffle(pool);
+
+        var legal = new List<ShapeType>();
+        int placed = 0;
+        foreach (int index in pool)
+        {
+            if (placed >= count) break;
+            int r = index / 9, c = index % 9;
+            legal.Clear();
+            for (int v = 1; v <= 5; v++)
+                if (PuzzleSolver.CanPlace(puzzle, r, c, (ShapeType)v)) legal.Add((ShapeType)v);
+
+            var answer = solution[r, c];
+            if (legal.Count < 2 || !legal.Contains(answer)) continue;
+
+            ShapeType other;
+            do { other = legal[Random.Range(0, legal.Count)]; } while (other == answer);
+            masks[index] = (1 << (int)answer) | (1 << (int)other);
+            placed++;
+        }
+        return masks;
+    }
+
+    /// <summary>
+    /// 빈칸 수와 제거 전략을 직접 지정해 퍼즐을 만든다.
+    /// 밸런스 측정처럼 GameManager 상태와 무관하게 특정 조건을 재현해야 할 때 쓴다.
+    /// </summary>
+    public ShapeType[,] CreatePuzzle(ShapeType[,] solution, int blanks, RemovalStrategy strategy)
+    {
+        var puzzle = (ShapeType[,])solution.Clone();
+        RemoveCells(puzzle, blanks, strategy);
         return puzzle;
     }
 
@@ -102,13 +144,6 @@ public class PuzzleGenerator : MonoBehaviour
             for (int col = 0; col < 9; col++)
                 positions.Add(new Vector2Int(row, col));
 
-        // Mixed 는 매 생성 시 세 전략 중 하나를 랜덤 선택
-        if (strategy == RemovalStrategy.Mixed)
-        {
-            RemovalStrategy[] pool = { RemovalStrategy.Random, RemovalStrategy.CenterFocused, RemovalStrategy.BlockEven };
-            strategy = pool[Random.Range(0, pool.Length)];
-        }
-
         List<Vector2Int> ordered;
         switch (strategy)
         {
@@ -117,6 +152,9 @@ public class PuzzleGenerator : MonoBehaviour
                 break;
             case RemovalStrategy.BlockEven:
                 ordered = GetStrategicPositions(positions);
+                break;
+            case RemovalStrategy.Composite:
+                ordered = GetCompositePositions(positions);
                 break;
             default: // Random
                 Shuffle(positions);
@@ -131,7 +169,48 @@ public class PuzzleGenerator : MonoBehaviour
         }
     }
 
-    // 중심부 위주 제거: 각 블록의 중앙 → 중앙의 상하좌우 → 나머지(모서리) 순으로 정렬 (2장)
+    // 통합 제거: 세 배치를 번갈아 뽑아 한 판에 섞는다 (4장).
+    // 셋 중 하나를 고르는 것이 아니라, 중심부·균등·랜덤 순서를 돌아가며 한 칸씩 가져온다.
+    List<Vector2Int> GetCompositePositions(List<Vector2Int> positions)
+    {
+        var sources = new List<Vector2Int>[]
+        {
+            GetCenterFocusedPositions(positions),
+            GetStrategicPositions(positions),
+            ShuffledCopy(positions),
+        };
+        var cursor = new int[sources.Length];
+        var taken = new HashSet<Vector2Int>();
+        var ordered = new List<Vector2Int>(positions.Count);
+
+        for (int turn = 0; ordered.Count < positions.Count; turn++)
+        {
+            int s = turn % sources.Length;
+            var list = sources[s];
+            while (cursor[s] < list.Count && taken.Contains(list[cursor[s]])) cursor[s]++;
+            if (cursor[s] >= list.Count)
+            {
+                // 이 배치가 소진됐다면 다른 배치가 남아 있는지 확인한다.
+                bool any = false;
+                for (int i = 0; i < sources.Length; i++) if (cursor[i] < sources[i].Count) any = true;
+                if (!any) break;
+                continue;
+            }
+            var pick = list[cursor[s]++];
+            taken.Add(pick);
+            ordered.Add(pick);
+        }
+        return ordered;
+    }
+
+    List<Vector2Int> ShuffledCopy(List<Vector2Int> source)
+    {
+        var copy = new List<Vector2Int>(source);
+        Shuffle(copy);
+        return copy;
+    }
+
+    // 중심부 위주 제거: 각 블록의 중앙 → 중앙의 상하좌우 → 나머지(모서리) 순으로 정렬 (3장)
     List<Vector2Int> GetCenterFocusedPositions(List<Vector2Int> positions)
     {
         List<Vector2Int> center = new List<Vector2Int>();   // 우선순위 0: 블록 중앙

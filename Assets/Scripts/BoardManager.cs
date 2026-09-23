@@ -66,11 +66,38 @@ public class BoardManager : MonoBehaviour
     public ShapeType[,] GetInitialBoard() => (ShapeType[,])initialBoard.Clone();
     public ShapeType[,] GetSolutionBoard() => (ShapeType[,])solutionBoard.Clone();
 
-    public void Restore(ShapeType[,] initial, ShapeType[,] board, ShapeType[,] solution)
+    public void Restore(ShapeType[,] initial, ShapeType[,] board, ShapeType[,] solution, int[] memos = null)
     {
         initialBoard = (ShapeType[,])initial.Clone();
         solutionBoard = (ShapeType[,])solution.Clone();
         ApplyBoard(board);
+        ApplyMemos(memos);
+    }
+
+    /// <summary>비트마스크(도형 1~5 = 비트 1~5)로 메모를 채운다. null 이면 아무것도 하지 않는다.</summary>
+    public void ApplyMemos(int[] masks)
+    {
+        if (!ready || masks == null || masks.Length != 81) return;
+        for (int i = 0; i < 81; i++)
+        {
+            var cell = cells[i / 9, i % 9];
+            cell.ClearMemos();
+            if (masks[i] == 0) continue;
+            for (int v = 1; v <= 5; v++)
+                if ((masks[i] & (1 << v)) != 0) cell.AddMemo((ShapeType)v);
+        }
+        Changed?.Invoke();
+    }
+
+    /// <summary>현재 보드의 메모를 비트마스크로 읽는다(이어하기 저장용).</summary>
+    public int[] GetMemoMasks()
+    {
+        var masks = new int[81];
+        if (!ready) return masks;
+        for (int i = 0; i < 81; i++)
+            foreach (var memo in cells[i / 9, i % 9].memos)
+                masks[i] |= 1 << (int)memo;
+        return masks;
     }
 
     void ApplyBoard(ShapeType[,] board)
@@ -95,6 +122,12 @@ public class BoardManager : MonoBehaviour
         solutionBoard = puzzleGenerator.GenerateCompletePuzzle();
         initialBoard = puzzleGenerator.CreatePuzzleFromSolution(solutionBoard, GameManager.Instance.currentDifficulty);
         ApplyBoard(initialBoard);
+
+        // 스테이지 모드의 지정 구간에만 처음부터 메모 단서를 준다.
+        int memoCount = GameManager.Instance.currentMode == GameMode.Stage
+            ? StageBalance.MemoCount(GameManager.Instance.currentStage) : 0;
+        if (memoCount > 0)
+            ApplyMemos(puzzleGenerator.CreateMemos(initialBoard, solutionBoard, memoCount));
     }
 
     public void RestartPuzzle() { if (ready) ApplyBoard(initialBoard); }
@@ -105,6 +138,7 @@ public class BoardManager : MonoBehaviour
         if (selectedCell == null) return;
         selectedCell = null;
         RefreshSelection();
+        SFXManager.PlaySelect();
         Changed?.Invoke();
     }
 
@@ -119,10 +153,16 @@ public class BoardManager : MonoBehaviour
         if (cell.isInitial)
         {
             if (selectedShape != ShapeType.None)
+            {
                 Feedback?.Invoke("처음부터 놓인 도형은 바꿀 수 없어요.");
+                SFXManager.PlayError();
+            }
+            else SFXManager.PlaySelect();
             return;
         }
-        if (placeOnCellClick) PlaceShape();
+        // 배치가 일어나면 PlaceShape 가 알맞은 소리를 낸다. 선택음까지 겹쳐 울리지 않게 한다.
+        if (placeOnCellClick) { PlaceShape(); return; }
+        SFXManager.PlaySelect();
     }
 
     public void SelectShape(int shapeIndex)
@@ -141,7 +181,7 @@ public class BoardManager : MonoBehaviour
     {
         if (selectedCell == null || !InputEnabled || complete) return;
         // 선택한 도형이 없으면 칸 선택(강조)만 하고 아무것도 놓지 않는다.
-        if (selectedShape == ShapeType.None) return;
+        if (selectedShape == ShapeType.None) { SFXManager.PlaySelect(); return; }
         // 고정 칸을 켜 둔 채 도형을 눌렀을 때. 조용히 무시하면 고장난 줄 안다.
         if (selectedCell.isInitial)
         {
@@ -152,15 +192,17 @@ public class BoardManager : MonoBehaviour
         {
             if (selectedCell.memos.Contains(selectedShape)) selectedCell.RemoveMemo(selectedShape);
             else selectedCell.AddMemo(selectedShape);
+            SFXManager.PlayMemo();
             return;
         }
         if (!PuzzleSolver.CanPlace(GetBoard(), selectedCell.row, selectedCell.col, selectedShape))
         {
             selectedCell.ShowConflict();
             Feedback?.Invoke("같은 행·열·블록에 세 번째 도형은 놓을 수 없어요.");
+            SFXManager.PlayError();
             return;
         }
-        if (selectedCell.currentShape == selectedShape) return;
+        if (selectedCell.currentShape == selectedShape) { SFXManager.PlaySelect(); return; }
         selectedCell.SetShape(selectedShape);
         selectedCell.PlayPlacement();
         SFXManager.PlayPlace();
@@ -194,6 +236,7 @@ public class BoardManager : MonoBehaviour
         if (!compatible && !PuzzleSolver.TrySolve(current, out answer, out bool timeout))
         {
             Feedback?.Invoke(timeout ? "힌트 계산이 길어졌어요. 최근 도형을 지우고 다시 시도해 주세요." : "현재 배치로는 완성할 수 없어요. 놓은 도형 일부를 바꿔 주세요.");
+            SFXManager.PlayError();
             return false;
         }
         selectedCell = target;
@@ -220,8 +263,7 @@ public class BoardManager : MonoBehaviour
         Changed?.Invoke();
         if (!PuzzleSolver.IsValid(GetBoard(), true)) return;
         complete = true;
-        if (Completed != null) Completed.Invoke();
-        else FindFirstObjectByType<GameController>()?.OnPuzzleComplete();
+        Completed?.Invoke();
     }
 
     void RefreshSelection()

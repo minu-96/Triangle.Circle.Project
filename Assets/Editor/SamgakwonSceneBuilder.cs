@@ -287,6 +287,8 @@ public static class SamgakwonSceneBuilder
         colors.disabledColor = new Color(0.85f, 0.85f, 0.85f, 0.5f);
         colors.fadeDuration = 0.08f;
         button.colors = colors;
+        // 모든 버튼이 이 함수를 거치므로 클릭음을 여기서 한 번에 붙인다.
+        rect.gameObject.AddComponent<ButtonClickSound>();
         return button;
     }
 
@@ -977,7 +979,7 @@ public static class SamgakwonSceneBuilder
         Size(filled.rectTransform, 80, 20);
 
         // 퍼즐 엔진
-        var engine = new GameObject("Puzzle Engine", typeof(RuleChecker), typeof(PuzzleGenerator), typeof(BoardManager));
+        var engine = new GameObject("Puzzle Engine", typeof(PuzzleGenerator), typeof(BoardManager));
         engine.transform.SetParent(root, false);
         var board = engine.GetComponent<BoardManager>();
         board.cellPrefab = cellPrefab;

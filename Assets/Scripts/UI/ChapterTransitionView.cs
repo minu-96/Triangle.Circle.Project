@@ -65,6 +65,7 @@ public class ChapterTransitionView : MonoBehaviour
     {
         IsPlaying = true;
         group.blocksRaycasts = true;   // 연출 중에는 보드 입력을 막는다
+        SFXManager.PlayChapter();
 
         yield return Fade(0f, 1f, fadeIn);
         yield return new WaitForSecondsRealtime(hold);

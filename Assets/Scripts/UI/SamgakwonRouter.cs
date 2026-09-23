@@ -67,6 +67,10 @@ public class SamgakwonRouter : MonoBehaviour
             }, 0.6f, 0.6f, 0.06f);
         }
         UpdateMusic();
+
+        // 씬에 이미 있는 버튼 전체에 클릭음을 붙인다.
+        // (빌더를 다시 돌리지 않은 씬도 이걸로 동작한다)
+        ButtonClickSound.BindAll(gameObject);
     }
 
     void Start() => ShowHome();
@@ -97,6 +101,8 @@ public class SamgakwonRouter : MonoBehaviour
         if (current != null && current != target) current.SetVisible(false);
         current = target;
         target.SetVisible(true);
+        // OnShow 에서 스테이지 버튼 등이 새로 만들어지므로 그 뒤에 훑는다.
+        ButtonClickSound.BindAll(target.gameObject);
         if (topBar != null) topBar.ShowBack(target != (UIScreen)homeScreen);
     }
 
