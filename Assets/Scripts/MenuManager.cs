@@ -23,6 +23,22 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene("Stage"); // 스테이지 선택 씬 이름
     }
 
+    // 엔드리스 보너스 모드 시작 (스테이지 81 클리어로 해금된 경우에만)
+    public void StartEndless()
+    {
+        if (!GameManager.IsEndlessUnlocked())
+        {
+            Debug.Log("엔드리스 모드는 스테이지 81 클리어 후 해금됩니다.");
+            return;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetEndless();
+        }
+        SceneManager.LoadScene("InGame");
+    }
+
     void SetDifficultyAndStart(GameDifficulty difficulty)
     {
         if (GameManager.Instance != null)

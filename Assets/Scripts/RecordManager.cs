@@ -67,6 +67,11 @@ public class RecordManager : MonoBehaviour
         {
             return $"Record_Stage_{GameManager.Instance.currentStage}";
         }
+        else if (GameManager.Instance.currentMode == GameMode.Endless)
+        {
+            // 엔드리스는 시간 기록을 남기지 않는다(누적 판 수만 카운트). 키만 분리해 오염 방지.
+            return "Record_Endless";
+        }
         else
         {
             return $"Record_Classic_{GameManager.Instance.currentDifficulty}";

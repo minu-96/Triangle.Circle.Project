@@ -48,6 +48,46 @@ public class GameManager : MonoBehaviour
     Debug.Log($"스테이지 설정: {currentStage}");
 }
 
+    // 엔드리스 보너스 모드 진입 (스테이지 81 클리어 시 해금)
+    public void SetEndless()
+    {
+        currentMode = GameMode.Endless;
+        Debug.Log("엔드리스 모드 진입");
+    }
+
+    // ── 엔드리스 해금/기록 (PlayerPrefs) ─────────────────────────
+    private const string KEY_ENDLESS_UNLOCKED = "EndlessUnlocked";
+    private const string KEY_ENDLESS_COUNT = "EndlessClearCount";
+
+    public static bool IsEndlessUnlocked()
+    {
+        return PlayerPrefs.GetInt(KEY_ENDLESS_UNLOCKED, 0) == 1;
+    }
+
+    public static void UnlockEndless()
+    {
+        if (PlayerPrefs.GetInt(KEY_ENDLESS_UNLOCKED, 0) != 1)
+        {
+            PlayerPrefs.SetInt(KEY_ENDLESS_UNLOCKED, 1);
+            PlayerPrefs.Save();
+            Debug.Log("엔드리스 모드 해금!");
+        }
+    }
+
+    public static int GetEndlessClearCount()
+    {
+        return PlayerPrefs.GetInt(KEY_ENDLESS_COUNT, 0);
+    }
+
+    // 엔드리스에서 한 판 클리어할 때마다 누적 카운터 증가 후 새 카운트 반환
+    public static int IncrementEndlessClearCount()
+    {
+        int next = GetEndlessClearCount() + 1;
+        PlayerPrefs.SetInt(KEY_ENDLESS_COUNT, next);
+        PlayerPrefs.Save();
+        return next;
+    }
+
     // Inspector에서 값 조절 가능하도록 변경
     [Header("Difficulty Balance")]
     [Tooltip("Easy 모드 빈칸 개수")]
@@ -73,15 +113,16 @@ public class GameManager : MonoBehaviour
 
 public enum GameDifficulty
 {
-    Easy,    // 60칸 채워짐 (21칸 빈칸)
-    Normal,  // 40칸 채워짐 (41칸 빈칸)
-    Hard     // 20칸 채워짐 (61칸 빈칸)
+    Easy,    // 빈칸 15
+    Normal,  // 빈칸 35
+    Hard     // 빈칸 55
 }
 
 public enum GameMode
 {
     Classic,
-    Stage
+    Stage,
+    Endless
 }
 
 public enum ShapeType

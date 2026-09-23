@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Cell : MonoBehaviour, IPointerClickHandler
 {
@@ -22,12 +23,23 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     public Image backgroundImage;
     public Transform memoContainer; // 메모 표시할 컨테이너
     public GameObject memoPrefab; // 메모 아이템 프리팹
+    [Tooltip("고정 단서 표시(작은 점). 처음부터 놓인 칸에만 보인다.")]
+    public GameObject givenMarker;
+    [Tooltip("선택된 칸을 감싸는 테두리. 어떤 칸이 켜져 있는지 한눈에 보이게 한다.")]
+    public GameObject selectionRing;
     
+    [Header("Cell Sprites (있으면 색상 대신 사용)")]
+    public Sprite normalSprite;
+    public Sprite selectedSprite;
+    public Sprite relatedSprite;
+    public Sprite errorSprite;
+
     [Header("Colors")]
-    public Color normalColor = new Color(0.2f, 0.2f, 0.2f);
-    public Color selectedColor = new Color(0.4f, 0.4f, 0.5f);
-    public Color initialColor = new Color(0.15f, 0.15f, 0.15f);
-    public Color editableHighlight = new Color(0.3f, 0.3f, 0.35f); // 수정 가능 표시
+    // 삼각원 라이트 테마 (목업 기준: 크림 배경 · 틸 강조)
+    public Color normalColor = new Color(0.988f, 0.973f, 0.933f);     // 크림 셀 배경
+    public Color selectedColor = new Color(0.816f, 0.945f, 0.925f);   // 선택 셀 (연한 틸)
+    public Color initialColor = new Color(0.976f, 0.953f, 0.898f);    // 초기(고정) 셀 - 살짝 진한 크림
+    public Color editableHighlight = new Color(0.902f, 0.965f, 0.957f); // 관련 행·열·블록 하이라이트
 
     private BoardManager boardManager;
     private List<GameObject> memoObjects = new List<GameObject>();
@@ -58,19 +70,8 @@ public class Cell : MonoBehaviour, IPointerClickHandler
 
     public void UpdateVisual()
     {
-        // 배경색 설정
-        if (backgroundImage != null)
-        {
-            if (isInitial)
-            {
-                backgroundImage.color = initialColor;
-            }
-            else
-            {
-                // 수정 가능한 셀은 약간 다른 색으로 표시
-                backgroundImage.color = normalColor;
-            }
-        }
+        // 배경 (선택 상태를 유지한 채 갱신한다)
+        ApplyBackground();
 
         // 도형 이미지 설정
         if (shapeImage != null)
@@ -97,6 +98,10 @@ public class Cell : MonoBehaviour, IPointerClickHandler
             }
         }
         
+        // 고정 단서 점
+        if (givenMarker != null)
+            givenMarker.SetActive(isInitial && currentShape != ShapeType.None);
+
         // 메모 표시
         UpdateMemoVisual();
     }
@@ -173,17 +178,69 @@ public class Cell : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // 초기 배치된 셀은 클릭 불가
-        if (isInitial) return;
-        
+
         boardManager.OnCellClicked(this);
     }
 
-    public void Highlight(bool enable)
+    bool selected, related;
+    Coroutine animationRoutine, conflictRoutine;
+
+    public void SetSelection(bool isSelected, bool isRelated)
     {
-        if (backgroundImage != null && !isInitial)
+        selected = isSelected;
+        related = isRelated;
+        if (selectionRing != null) selectionRing.SetActive(selected);
+        ApplyBackground();
+    }
+
+    void ApplyBackground()
+    {
+        if (backgroundImage == null) return;
+        Sprite sprite = selected ? selectedSprite : related ? relatedSprite : normalSprite;
+        if (sprite != null)
         {
-            backgroundImage.color = enable ? selectedColor : normalColor;
+            backgroundImage.sprite = sprite;
+            backgroundImage.color = Color.white;
         }
+        else
+        {
+            backgroundImage.color = selected ? selectedColor : related ? editableHighlight
+                                  : isInitial ? initialColor : normalColor;
+        }
+    }
+
+    public void Highlight(bool enable) => SetSelection(enable, false);
+
+    public void ShowConflict()
+    {
+        if (conflictRoutine != null) StopCoroutine(conflictRoutine);
+        conflictRoutine = StartCoroutine(Conflict());
+    }
+    IEnumerator Conflict()
+    {
+        if (backgroundImage != null)
+        {
+            if (errorSprite != null) { backgroundImage.sprite = errorSprite; backgroundImage.color = Color.white; }
+            else backgroundImage.color = new Color(1f, 0.83f, 0.79f);
+        }
+        yield return new WaitForSecondsRealtime(0.35f);
+        SetSelection(selected, related);
+    }
+    public void PlayPlacement()
+    {
+        if (shapeImage == null || PlayerPrefs.GetInt("SamgakwonMotion", 1) == 0) return;
+        if (animationRoutine != null) StopCoroutine(animationRoutine);
+        animationRoutine = StartCoroutine(Pop());
+    }
+    IEnumerator Pop()
+    {
+        float elapsed = 0;
+        while (elapsed < 0.16f)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            shapeImage.transform.localScale = Vector3.one * (1f + 0.12f * Mathf.Sin(elapsed / 0.16f * Mathf.PI));
+            yield return null;
+        }
+        shapeImage.transform.localScale = Vector3.one;
     }
 }

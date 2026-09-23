@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 1
+    path: Assets/WebScene/Samgakwon.unity
+    guid: 6f78e6ad19a74563bfc494e68b61ad2d
   - enabled: 0
     path: Assets/Scenes/Start.unity
     guid: ec41fbbf419ce49af8dd35dc1657b223
