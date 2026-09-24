@@ -1,0 +1,123 @@
+{
+  "product": "삼각원",
+  "artDirection": "밝은 크림, 민트, 다섯 가지 컬러 도형. 포근하고 짧게 즐기는 퍼즐.",
+  "palette": {
+    "paper": "#FFFBF3",
+    "ink": "#484B57",
+    "mint": "#E7F7F2",
+    "accent": "#08AAA5",
+    "triangle": "#FF8875",
+    "circle": "#44BDB5",
+    "square": "#FFC342",
+    "diamond": "#B286DE",
+    "pentagon": "#59ADF0"
+  },
+  "assets": [
+    {
+      "file": "assets/app-icon-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "purpose": "app-icon-1024"
+    },
+    {
+      "file": "assets/app-icon-512.png",
+      "width": 512,
+      "height": 512,
+      "purpose": "app-icon-512"
+    },
+    {
+      "file": "assets/community-banner-1500x500.png",
+      "width": 1500,
+      "height": 500,
+      "purpose": "community-banner-1500x500"
+    },
+    {
+      "file": "assets/prototype-gameplay-reference-1024x1536.png",
+      "width": 1024,
+      "height": 1536,
+      "purpose": "prototype-gameplay-reference-1024x1536"
+    },
+    {
+      "file": "assets/social-card-1200x630.png",
+      "width": 1200,
+      "height": 630,
+      "purpose": "social-card-1200x630"
+    },
+    {
+      "file": "assets/square-logo-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "purpose": "square-logo-1024"
+    },
+    {
+      "file": "assets/store-feature-banner-1920x700.png",
+      "width": 1920,
+      "height": 700,
+      "purpose": "store-feature-banner-1920x700"
+    },
+    {
+      "file": "assets/store-key-art-16x9-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "store-key-art-16x9-1920x1080"
+    },
+    {
+      "file": "assets/store-landscape-1856x1064.png",
+      "width": 1856,
+      "height": 1064,
+      "purpose": "store-landscape-1856x1064"
+    },
+    {
+      "file": "assets/store-square-card-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "purpose": "store-square-card-1024"
+    },
+    {
+      "file": "assets/wordmark-transparent-1500x360.png",
+      "width": 1500,
+      "height": 360,
+      "purpose": "wordmark-transparent-1500x360"
+    }
+  ],
+  "sourceFiles": [
+    "source/samgakwon-wordmark.svg",
+    "source/wordmark-transparent.svg",
+    "source/app-icon.svg",
+    "source/generate_store_art.py",
+    "source/generate_screen_designs.py",
+    "source/generate_wordmark.py"
+  ],
+  "uiDesignConcepts": [
+    {
+      "file": "screen-designs/screen-design-classic.png",
+      "width": 1020,
+      "height": 1500,
+      "purpose": "Unity UI layout concept; not a release-build screenshot"
+    },
+    {
+      "file": "screen-designs/screen-design-clear.png",
+      "width": 1020,
+      "height": 1500,
+      "purpose": "Unity UI layout concept; not a release-build screenshot"
+    },
+    {
+      "file": "screen-designs/screen-design-gameplay.png",
+      "width": 1020,
+      "height": 1500,
+      "purpose": "Unity UI layout concept; not a release-build screenshot"
+    },
+    {
+      "file": "screen-designs/screen-design-home.png",
+      "width": 1020,
+      "height": 1500,
+      "purpose": "Unity UI layout concept; not a release-build screenshot"
+    },
+    {
+      "file": "screen-designs/screen-design-stages.png",
+      "width": 1020,
+      "height": 1500,
+      "purpose": "Unity UI layout concept; not a release-build screenshot"
+    }
+  ]
+}

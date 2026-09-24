@@ -1,0 +1,86 @@
+[
+  {
+    "label": "상품 페이지 배경 · 1920×520",
+    "path": "background/product-background-1920x520.png",
+    "width": 1920,
+    "height": 520,
+    "format": "PNG"
+  },
+  {
+    "label": "상품 타이틀 · 1:1 · 512×512",
+    "path": "ko-KR/1x1/title-image-512.png",
+    "width": 512,
+    "height": 512,
+    "format": "PNG"
+  },
+  {
+    "label": "상품 목록 · 757×426",
+    "path": "ko-KR/16x9/listing-image-757x426.png",
+    "width": 757,
+    "height": 426,
+    "format": "PNG"
+  },
+  {
+    "label": "한 줄 소개 · 558×132",
+    "path": "ko-KR/intro/one-line-image-558x132.png",
+    "width": 558,
+    "height": 132,
+    "format": "PNG"
+  },
+  {
+    "label": "전시 이미지 01 · 퍼즐 규칙",
+    "path": "ko-KR/exhibit/01-rule-757x426.png",
+    "width": 757,
+    "height": 426,
+    "format": "PNG"
+  },
+  {
+    "label": "전시 이미지 02 · 클래식",
+    "path": "ko-KR/exhibit/02-classic-757x426.png",
+    "width": 757,
+    "height": 426,
+    "format": "PNG"
+  },
+  {
+    "label": "전시 이미지 03 · 스테이지",
+    "path": "ko-KR/exhibit/03-stages-757x426.png",
+    "width": 757,
+    "height": 426,
+    "format": "PNG"
+  },
+  {
+    "label": "전시 이미지 04 · 플레이 예시 그래픽",
+    "path": "ko-KR/exhibit/04-play-757x426.png",
+    "width": 757,
+    "height": 426,
+    "format": "PNG"
+  },
+  {
+    "label": "전시 이미지 05 · 엔드리스",
+    "path": "ko-KR/exhibit/05-endless-757x426.png",
+    "width": 757,
+    "height": 426,
+    "format": "PNG"
+  },
+  {
+    "label": "제공 화면 01 · 홈",
+    "path": "ko-KR/exhibit-860x483/01-title-home-860x483.png",
+    "width": 860,
+    "height": 483,
+    "format": "PNG"
+  },
+  {
+    "label": "제공 화면 02 · 플레이",
+    "path": "ko-KR/exhibit-860x483/02-gameplay-860x483.png",
+    "width": 860,
+    "height": 483,
+    "format": "PNG"
+  },
+  {
+    "label": "제공 화면 03 · 스테이지",
+    "path": "ko-KR/exhibit-860x483/03-stage-select-860x483.png",
+    "width": 860,
+    "height": 483,
+    "format": "PNG"
+  }
+]
